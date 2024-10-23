@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------
     MainController.cs
 
-    This script controls the behavior of 
+    This script controls the main behavior of the CCTV simulator
     Author: Juan Núñez
     Creation: 15-09-2024
     Modification:09-10-2024

@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class ScreenManager : MonoBehaviour
 {
-    // Cambia a la siguiente Render Texture
+    /// <summary>
+    /// Switches to the next RenderTexture in the list.
+    /// Increments the current index and loops back to the first texture when the end of the list is reached.
+    /// </summary>
+    /// <param name="currentTextureIndex">The current index of the active RenderTexture.</param>
+    /// <param name="renderTextures">A list containing the available RenderTextures.</param>
+    /// <param name="screenMaterial">The material on which the RenderTexture is displayed.</param>
     public void NextRenderTexture(int currentTextureIndex, List<RenderTexture> renderTextures, Material screenMaterial)
     {
         currentTextureIndex++; // Increase index
@@ -18,7 +24,13 @@ public class ScreenManager : MonoBehaviour
         ChangeRenderTexture(screenMaterial, currentTextureIndex, renderTextures);
     }
 
-    // Cambia a la Render Texture anterior
+    /// <summary>
+    /// Switches to the previous RenderTexture in the list.
+    /// Decrements the current index and loops back to the last texture when the start of the list is reached.
+    /// </summary>
+    /// <param name="currentTextureIndex">The current index of the active RenderTexture.</param>
+    /// <param name="renderTextures">A list containing the available RenderTextures.</param>
+    /// <param name="screenMaterial">The material on which the RenderTexture is displayed.</param>
     public void PreviousRenderTexture(int currentTextureIndex, List<RenderTexture> renderTextures, Material screenMaterial)
     {
         currentTextureIndex--; // Decrease index
@@ -32,7 +44,12 @@ public class ScreenManager : MonoBehaviour
         ChangeRenderTexture(screenMaterial, currentTextureIndex, renderTextures);
     }
 
-    // Cambiar la Render Texture en el material
+    /// <summary>
+    /// Updates the main texture of the provided material with the RenderTexture at the specified index.
+    /// </summary>
+    /// <param name="screenMaterial">The material to apply the RenderTexture to.</param>
+    /// <param name="index">The index of the RenderTexture to use from the list.</param>
+    /// <param name="renderTextures">A list containing the available RenderTextures.</param>
     public void ChangeRenderTexture(Material screenMaterial, int index, List<RenderTexture> renderTextures)
     {
         if (screenMaterial != null && renderTextures[index] != null)

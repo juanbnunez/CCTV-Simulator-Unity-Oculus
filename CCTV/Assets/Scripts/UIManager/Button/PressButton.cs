@@ -2,8 +2,8 @@
     PressButton.cs
 
     This script controls the behavior of a button in Unity. When an object
-    collides with the button, it presses down, changes color and trigger the camera movement.
-    The button then returns to its original position and color when the object leaves.
+    collides with the button, it presses down, changes color and triggers the camera movement.
+    The button continues to invoke the assigned function while it is pressed down.
     Author: Juan Núñez
     Creation: 10-08-2024
     Modification:09-10-2024
@@ -21,6 +21,7 @@ public class PressButton : MonoBehaviour
     public float pressDepth;
     public float pressSpeed;
     public Color pressedColor;
+    public float callInterval = 0.2f; // How frequently to call the press action.
 
     public UnityEvent OnButtonPress;
     public UnityEvent OnButtonRelease;
@@ -32,6 +33,7 @@ public class PressButton : MonoBehaviour
     private Color originalColor;
     private Vector3 initialPosition;
     private Renderer cylinderRenderer;
+    private Coroutine pressCoroutine;  // Reference to the coroutine that handles repeated calls.
 
     /// <summary>
     /// Initializes the button by storing the initial position and color of the cylinder.
@@ -59,24 +61,29 @@ public class PressButton : MonoBehaviour
         if (!IsPressed)
         {
             IsPressed = true;
-            OnButtonPress?.Invoke();
-            StartCoroutine(PressingButton());
+            pressCoroutine = StartCoroutine(PressingButton());
         }
     }
 
     /// <summary>
-    /// Coroutine to animate the button press action.
-    /// Moves the cylinder down to simulate pressing the button.
+    /// Coroutine to handle continuous invocation of the button press action while pressed.
     /// </summary>
     /// <returns>An IEnumerator for the coroutine.</returns>
     private IEnumerator PressingButton()
     {
         Vector3 targetPosition = initialPosition - new Vector3(0, pressDepth, 0);
         cylinderRenderer.material.color = pressedColor;
-        while (cylinder.position != targetPosition)
+
+        // Continue pressing the button and calling the function.
+        while (IsPressed)
         {
             cylinder.position = Vector3.MoveTowards(cylinder.position, targetPosition, pressSpeed * Time.deltaTime);
-            yield return null;
+
+            // Call the assigned function while pressed.
+            OnButtonPress?.Invoke();
+
+            // Wait for the interval before calling again.
+            yield return new WaitForSeconds(callInterval);
         }
     }
 
@@ -89,6 +96,7 @@ public class PressButton : MonoBehaviour
     {
         if (IsPressed)
         {
+            StopCoroutine(pressCoroutine);  // Stop the coroutine when the button is released.
             StartCoroutine(ReleaseButton());
         }
     }
